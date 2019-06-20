@@ -38,7 +38,7 @@ NODE_ENV=development node server.js
 ## End Point
 **1. GET**
 * `/notes`
-* `/note/:id` (Get notes by id)
+* `/note/:id` (Get note by id)
 * `/categories`
 * `/category/:id` (Get category by id)
 
@@ -50,11 +50,11 @@ NODE_ENV=development node server.js
     * ``` { "categoryName": "Category6" } ```
 
 **3. PATCH**
-* `/note/:id` (Update notes by id)
+* `/note/:id` (Update note by id)
    *``` { "title": "Party", "note": "Herman's Party at 18.00", "category": 2 } ```
 * `/category/:id` (Update category by id)
    * ``` { "categoryName": "Category8" } ```
 
 **4. DELETE**
-* `/note/:id` (Delete notes by id)
+* `/note/:id` (Delete note by id)
 * `/category/:id` (Delete category by id)
