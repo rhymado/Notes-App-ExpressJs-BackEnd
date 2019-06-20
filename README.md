@@ -10,13 +10,14 @@ Express.js is a web application framework for Node.js. [More about Express](http
 
 ## Requirements
 1. <a href="https://nodejs.org/en/download/">Node Js</a>
-2. <a href="https://expressjs.com/en/starter/installing.html">Express Js</a>
-6. <a href="https://www.getpostman.com/">Postman</a>
+2. Node_modules
+3. <a href="https://www.getpostman.com/">Postman</a>
+4. Web Server (ex. localhost)
 
 ## How to run the app ?
 1. Open app's directory in CMD or Terminal
 2. Type `npm install`
-3. Open file called **.env**, set up first [here](#set-up-env-file)
+3. Make new file a called **.env**, set up first [here](#set-up-env-file)
 4. Turn on Web Server and MySQL can using Third-party tool like xampp, etc.
 5. Create a database with the name note, and Import file [note.sql](note.sql) to **phpmyadmin**
 6. Open Postman desktop application or Chrome web app extension that has installed before
@@ -36,9 +37,9 @@ NODE_ENV=development node server.js
 
 ## End Point
 **1. GET**
-* `/note`
+* `/notes`
 * `/note/:id` (Get notes by id)
-* `/category`
+* `/categories`
 * `/category/:id` (Get category by id)
 
 **2. POST**
@@ -50,7 +51,9 @@ NODE_ENV=development node server.js
 
 **3. PATCH**
 * `/note/:id` (Update notes by id)
+   *``` { "title": "Party", "note": "Herman's Party at 18.00", "category": 2 } ```
 * `/category/:id` (Update category by id)
+   * ``` { "categoryName": "Category8" } ```
 
 **4. DELETE**
 * `/note/:id` (Delete notes by id)
