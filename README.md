@@ -11,10 +11,6 @@ Express.js is a web application framework for Node.js. [More about Express](http
 ## Requirements
 1. <a href="https://nodejs.org/en/download/">Node Js</a>
 2. <a href="https://expressjs.com/en/starter/installing.html">Express Js</a>
-2. Body-Parser  ``` npm install body-parser --save ```
-3. Mysql  ``` npm install mysql --save ```
-4. CORS   ``` npm install cors --save ```
-5. .ENV   ``` npm install dotenv --save ```
 6. <a href="https://www.getpostman.com/">Postman</a>
 
 ## How to run the app ?
