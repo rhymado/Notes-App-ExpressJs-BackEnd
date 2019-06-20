@@ -16,8 +16,8 @@ module.exports = (app) => {
 
 	//=================== NOTE ====================//
 
-	app.get('/note', note.getNote)			
-	app.get('/note/:id', note.getNoteById)	
+	app.get('/notes', note.getNotes)	
+	app.get('/note/:id', note.getNoteById)
 	app.post('/note', note.postNote)		
 	app.patch('/note/:id', note.patchNote) 	
 	app.delete('/note/:id', note.deleteNote)	
@@ -25,11 +25,11 @@ module.exports = (app) => {
 
 	//================ CATEGORY ===================//
 	
-	app.get('/category', category.getCategory) 			
-	app.get('/category/:id', category.getCategoryById) 	
+	app.get('/categories', category.getCategories) 
+	app.get('/category/:id', category.getCategoryById)			
 	app.post('/category', category.postCategory) 		
 	app.patch('/category/:id', category.patchCategory) 		
-	app.delete('/category/:id', category.deleteCategory) 				
+	app.delete('/category/:id', category.deleteCategory) 
 
 	
 }

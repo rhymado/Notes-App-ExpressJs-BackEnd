@@ -3,17 +3,54 @@
 let response = require('../response')
 let connect = require('../connect')
 
-exports.getNote = (req, res) => {
+exports.getNotes = (req, res) => {
+	let search = req.query.search || ''
+	let sort = req.query.sort || 'desc'
+	let limit = parseInt(req.query.limit) || 10
+	let page = parseInt(req.query.page) || 1
+	let offset = (limit * page) - limit;
+
+	let query = `	SELECT note.id, title, note, time, category_name 
+					FROM note 
+					LEFT JOIN category ON category.id = note.category_id
+					WHERE title LIKE '%${search}%' 
+					ORDER BY time ${sort}
+					LIMIT ${limit} OFFSET ${offset}	`
+
+
 	connect.query(
-		`SELECT note.id, title, note, time, category_name FROM note LEFT JOIN category ON category.id = note.category_id`,
-		(error, rows, field) => {
+		`SELECT count(*) as total FROM note WHERE title LIKE '%${search}%'`,
+		(error, rows) => {
 			if (error) {
-				throw error;
+				throw error
 			} else {
-				response.ok(rows, res)
+				let total = rows[0].total
+				let totalPage = Math.ceil(total / limit)
+
+				connect.query(
+					query,
+					(error, rows, field) => {
+						if (error) {
+							throw error;
+						} else {
+							return res.send({
+								status: 200,
+								data: rows,
+								info: {
+									total: total,
+									page: page,
+									totalPage: totalPage,
+									limit: limit,
+								}
+							})
+						}
+					}
+				)
+
 			}
 		}
 	)
+	
 }
 
 exports.getNoteById = (req, res) => {

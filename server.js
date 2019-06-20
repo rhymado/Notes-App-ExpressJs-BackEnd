@@ -5,7 +5,7 @@ let express = require('express')
 let cors = require('cors')
 let app = express()
 require('dotenv/config')
-let port = process.env.PORT
+let port = process.env.PORT || 3000
 let bodyParser = require('body-parser')
 let routes = require('./routes')
 
@@ -20,19 +20,8 @@ app.use(
 
 app.use(bodyParser.json())
 
+
 //============= CONFIGURASI CORS ==============//
-
-// var whitelist = ['http://192.158.100.78', 'http://192.168.898.18', 'http://192.168.8.102'] // PERMITED ORIGIN
-
-// corsOption = {
-// 	origin: (origin, callback) => {
-// 		if (whitelist.indexOf(origin) !== -1 || !origin) {
-// 			callback(null, true)
-// 		} else {
-// 			callback(new Error('Not allowed by CORS'))
-// 		}
-// 	}
-// }
 
 app.use(cors());
 

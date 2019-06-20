@@ -4,36 +4,39 @@ let response = require('../response');
 let connect = require('../connect');
 
 
-exports.getCategory = (req, res) => {
+exports.getCategories = (req, res) => {
+	var search = req.query.search || '';
+	if (search != null){
+		var query = `SELECT * FROM category WHERE category_name LIKE '%${search}%'`
+	} else {
+		var query = `SELECT * FROM category`
+	}
 	connect.query(
-		`SELECT * FROM category`,
+		query,
 		(error, rows, field) => {
 			if (error) {
-				throw err;
+				throw error;
 			} else {
 				response.ok(rows, res)
 			}
 		}
-	)
+	) 
 }
 
 exports.getCategoryById = (req, res) => {
-	id = req.params.id
-	if (id != '' && id != 0) {
+	let id = req.params.id
+	if ( id != 0 &&  id != '') {
 		connect.query(
 			`SELECT * FROM category WHERE id=?`,
+			[id],
 			(error, rows, field) => {
 				if (error) {
-					throw err;
+					throw error;
 				} else {
 					response.ok(rows, res)
 				}
 			}
 		)
-	} else {
-		return res.send({
-			message: 'cannot get data'
-		})
 	}
 }
 
@@ -105,7 +108,7 @@ exports.patchCategory = (req, res) => {
 exports.deleteCategory = (req, res)  => {
 	let id = req.params.id
 
-	if (id != '' && id != 0) {
+	if (id != null && id != 0) {
 		connect.query(
 			`DELETE FROM category WHERE id=?`,
 			[id],
@@ -130,19 +133,4 @@ exports.deleteCategory = (req, res)  => {
 			message: 'Cannot Delete Category',
 		})
 	}
-}
-
-exports.searchCategory = (req, res) => {
-	let key = req.params.key;
-
-	connect.query(
-		`SELECT * FROM category WHERE category_name LIKE '%${key}%'`,
-		(error, rows, field) => {
-			if (error) {
-				throw error;
-			} else {
-				res.json(rows);
-			}
-		}
-	)
 }
