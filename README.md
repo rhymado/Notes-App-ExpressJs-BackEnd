@@ -16,10 +16,10 @@ Express.js, or simply Express, is a web application framework for Node.js. [More
 ## Requirements
 1. <a href="https://nodejs.org/en/download/">Node Js</a>
 2. <a href="https://expressjs.com/en/starter/installing.html">Express Js</a>
-2. Body-Parser ``` npm install body-parser --save ```
-3. Mysql ``` npm install mysql --save ```
-4. CORS ``` npm install cors --save ```
-5. .ENV ``` npm install dotenv --save ```
+2. Body-Parser  ``` npm install body-parser --save ```
+3. Mysql  ``` npm install mysql --save ```
+4. CORS   ``` npm install cors --save ```
+5. .ENV   ``` npm install dotenv --save ```
 
 ## How to run the app ?
 1. Open CMD or Terminal and enter to the app directory
