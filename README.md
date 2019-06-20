@@ -47,7 +47,10 @@ NODE_ENV=development node server.js
 
 **2. POST**
 * `/note`
+    * ``` { "title": "Party", "note": "Herman's Party at 19.00", "category": 1 } ```
+
 * `/category`
+    * ``` { "categoryName": "Category6" } ```
 
 **3. PATCH**
 * `/note/:id` (Update notes by id)
