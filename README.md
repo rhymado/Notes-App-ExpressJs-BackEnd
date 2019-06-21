@@ -54,7 +54,7 @@ NODE_ENV=development node server.js
    *``` { "title": "Party", "note": "Herman's Party at 18.00", "category": 2 } ```
 * `/category/:id` (Update category by id)
    * ``` { "categoryName": "Category8" } ```
-
+   
 **4. DELETE**
 * `/note/:id` (Delete note by id)
 * `/category/:id` (Delete category by id)
