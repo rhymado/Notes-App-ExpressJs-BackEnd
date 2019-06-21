@@ -1,4 +1,4 @@
-<h1 align="center">ExpressJS - Simple Note App RESTfull API</h1>
+<h1 align="center">ExpressJS - Simple Notes App RESTfull API</h1>
 
 
 
@@ -38,9 +38,12 @@ NODE_ENV=development node server.js
 ## End Point
 **1. GET**
 * `/notes`
+* `/notes?search=lorem&sort=ASC&limit=5&page=1`
 * `/note/:id` (Get note by id)
 * `/categories`
+* `/categories?search=Diary`
 * `/category/:id` (Get category by id)
+
 
 **2. POST**
 * `/note`
