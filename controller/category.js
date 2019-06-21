@@ -5,12 +5,8 @@ let connect = require('../connect');
 
 
 exports.getCategories = (req, res) => {
-	var search = req.query.search || '';
-	if (search != null){
-		var query = `SELECT * FROM category WHERE category_name LIKE '%${search}%'`
-	} else {
-		var query = `SELECT * FROM category`
-	}
+	let search = req.query.search || '';
+	let query = `SELECT * FROM category WHERE category_name LIKE '%${search}%'`
 	connect.query(
 		query,
 		(error, rows, field) => {
