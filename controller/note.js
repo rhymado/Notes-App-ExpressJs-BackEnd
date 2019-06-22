@@ -9,15 +9,7 @@ exports.getNotes = (req, res) => {
 	let limit = parseInt(req.query.limit) || 10
 	let page = parseInt(req.query.page) || 1
 	let offset = (limit * page) - limit;
-
-	let query = `	SELECT note.id, title, note, time, category_name 
-					FROM note 
-					LEFT JOIN category ON category.id = note.category_id
-					WHERE title LIKE '%${search}%' 
-					ORDER BY time ${sort}
-					LIMIT ${limit} OFFSET ${offset}	`
-
-
+	
 	connect.query(
 		`SELECT count(*) as total FROM note WHERE title LIKE '%${search}%'`,
 		(error, rows) => {
@@ -28,7 +20,13 @@ exports.getNotes = (req, res) => {
 				let totalPage = Math.ceil(total / limit)
 
 				connect.query(
-					query,
+					`	SELECT note.id, title, note, time, category_name 
+						FROM note 
+						LEFT JOIN category ON category.id = note.category_id
+						WHERE title LIKE '%${search}%' 
+						ORDER BY time ${sort}
+						LIMIT ${limit} OFFSET ${offset}	`,
+
 					(error, rows, field) => {
 						if (error) {
 							throw error;
