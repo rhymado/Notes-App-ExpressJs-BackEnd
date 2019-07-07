@@ -17,15 +17,16 @@ module.exports = (app) => {
 	//=================== NOTE ====================//
 
 	app.get('/notes', note.getNotes)	
-	app.get('/note/:id', note.getNoteById)
-	app.post('/note', note.postNote)		
-	app.patch('/note/:id', note.patchNote) 	
-	app.delete('/note/:id', note.deleteNote)	
+	app.get('/notes/:id', note.getNoteById)
+	app.get('/notes/category/:id', note.getNotesByCategory)
+	app.post('/notes', note.postNote)		
+	app.patch('/notes/:id', note.patchNote) 	
+	app.delete('/notes/:id', note.deleteNote)	
 
 
 	//================ CATEGORY ===================//
 	
-	app.get('/categories', category.getCategories) 
+	app.get('/category', category.getCategories) 
 	app.get('/category/:id', category.getCategoryById)			
 	app.post('/category', category.postCategory) 		
 	app.patch('/category/:id', category.patchCategory) 		

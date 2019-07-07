@@ -4,10 +4,10 @@
 let express = require('express')
 let cors = require('cors')
 let app = express()
-require('dotenv/config')
 let port = process.env.PORT || 3000
 let bodyParser = require('body-parser')
 let routes = require('./routes')
+require('dotenv/config')
 
 
 //========== INITIALIZE BODY PARSER ===========//
@@ -23,7 +23,12 @@ app.use(bodyParser.json())
 
 //============= CONFIGURASI CORS ==============//
 
-app.use(cors());
+let corsOptions = {
+  origin: process.env.ALLOW_CORS,
+  optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
 
 
 //============= LOGGED MIDDLEWARE ==============//

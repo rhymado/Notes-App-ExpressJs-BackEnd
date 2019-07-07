@@ -1,7 +1,7 @@
 'use strict'
 
-let response = require('../response')
-let connect = require('../connect')
+const response = require('../response') // const
+const connect = require('../connect')	// const
 
 exports.getNotes = (req, res) => {
 	let search = req.query.search || ''
@@ -11,7 +11,7 @@ exports.getNotes = (req, res) => {
 	let offset = (limit * page) - limit;
 	
 	connect.query(
-		`SELECT count(*) as total FROM note WHERE title LIKE '%${search}%'`,
+		`SELECT count(*) as total FROM note WHERE title LIKE '%${search}%' `,
 		(error, rows) => {
 			if (error) {
 				throw error
@@ -20,27 +20,41 @@ exports.getNotes = (req, res) => {
 				let totalPage = Math.ceil(total / limit)
 
 				connect.query(
-					`	SELECT note.id, title, note, time, category_name 
+					`	SELECT note.id, title, note, time, category_name, category_id 
 						FROM note 
 						LEFT JOIN category ON category.id = note.category_id
 						WHERE title LIKE '%${search}%' 
 						ORDER BY time ${sort}
 						LIMIT ${limit} OFFSET ${offset}	`,
-
 					(error, rows, field) => {
 						if (error) {
 							throw error;
 						} else {
-							return res.send({
-								status: 200,
-								data: rows,
-								info: {
-									total: total,
-									page: page,
-									totalPage: totalPage,
-									limit: limit,
+
+							let searchResult = rows
+
+							connect.query(
+								`	SELECT note.id, title, note, time, category_name, category_id 
+									FROM note 
+									LEFT JOIN category ON category.id = note.category_id
+									ORDER BY time ${sort}
+									LIMIT ${limit} OFFSET ${offset}	`,
+								(error, rows, field) => {
+
+									return res.send({
+										status: 200,
+										data: rows,
+										searchResult: searchResult,
+										info: {
+											total: total,
+											page: page,
+											totalPage: totalPage,
+											limit: limit,
+										}
+									})
+
 								}
-							})
+							)
 						}
 					}
 				)
@@ -76,7 +90,7 @@ exports.getNoteById = (req, res) => {
 exports.postNote = (req, res) => {
 	let title = req.body.title;
 	let note = req.body.note;
-	let category_id = req.body.category;
+	let category_id = req.body.category_id;
 
 	if (title != '' && note !='' && category_id != '') {
 		connect.query(
@@ -84,16 +98,22 @@ exports.postNote = (req, res) => {
 			[title,note,category_id],
 			(error, rows, field) => {
 				if (rows.affectedRows != 0) {
-					return res.send({
-						error: false,
-						data: rows,
-						message: 'data has been created'
-					})
-				} else {
-					return res.send({
-						error:false,
-						message: "No data has been created"
-					})
+					connect.query(
+						`	SELECT note.id, title, note, time, category_name, category_id
+							FROM note 
+							LEFT JOIN category ON category.id = note.category_id
+							ORDER BY note.id DESC 
+							LIMIT 1	`,
+							(error, rows, field) => {
+							if (error) {
+								throw error;
+							} else {
+								return res.send({
+									data: rows
+								})
+							}
+						}
+					)
 				}
 			}
 		)
@@ -107,7 +127,7 @@ exports.postNote = (req, res) => {
 exports.patchNote = (req, res) => {
 	let title = req.body.title;
 	let note = req.body.note;
-	let category_id = req.body.category;
+	let category_id = req.body.category_id;
 	let id = req.params.id;
 
 	if (id != '' && id != 0) {
@@ -117,16 +137,22 @@ exports.patchNote = (req, res) => {
 				[title,note,category_id, id],
 				(error, rows, field) => {
 					if (rows.affectedRows != 0) {
-						return res.send({
-							error: false,
-							data: rows,
-							message: 'data has been updated'
-						})
-					} else {
-						return res.send({
-							error:false,
-							message: "No data has been changed"
-						})
+						connect.query(
+							`SELECT note.id, title, note, time, category_id, category_name 
+							 FROM note
+							 LEFT JOIN category ON category.id = note.category_id
+							 WHERE note.id=?`,
+							[id],
+							(error, rows, field) => {
+								if (error) {
+									throw error;
+								} else {
+									return res.send({
+										data: rows
+									})
+								}
+							}
+						)
 					}
 				}
 			)
@@ -144,7 +170,7 @@ exports.patchNote = (req, res) => {
 }
 
 exports.deleteNote = (req, res) => {
-	let id = req.params.id;
+	let id = parseInt(req.params.id);
 
 	if (id != '' && id != 0) {
 		connect.query(
@@ -154,7 +180,7 @@ exports.deleteNote = (req, res) => {
 				if (rows.affectedRows != 0) {
 					return res.send({
 						error: false,
-						data: rows,
+						data: id,
 						message: 'data has been deleted'
 					})
 				} else {
@@ -172,3 +198,64 @@ exports.deleteNote = (req, res) => {
 		})
 	}
 }
+
+exports.getNotesByCategory = (req, res) => {
+	let search = req.query.search || ''
+	let sort = req.query.sort || 'desc'
+	let limit = parseInt(req.query.limit) || 10
+	let page = parseInt(req.query.page) || 1
+	let offset = (limit * page) - limit;
+	let category_id = parseInt(req.params.id);
+
+	connect.query(
+		`SELECT count(*) as total FROM note WHERE title LIKE '%${search}%' AND category_id = ${category_id}`,
+		(error, rows) => {
+			if (error) {
+				throw error
+			} else {
+				let total = rows[0].total
+				let totalPage = Math.ceil(total / limit)
+
+				connect.query(
+					`	SELECT note.id, title, note, time, category_name, category_id 
+						FROM note 
+						LEFT JOIN category ON category.id = note.category_id
+						WHERE title LIKE '%${search}%' AND category_id = ${category_id}
+						ORDER BY time ${sort}	`,
+					(error, rows, field) => {
+						if (error) {
+							throw error;
+						} else {
+
+							let searchResult = rows
+
+							connect.query(
+								`	SELECT note.id, title, note, time, category_name, category_id 
+									FROM note 
+									LEFT JOIN category ON category.id = note.category_id
+									WHERE category_id = ${category_id}
+									ORDER BY time ${sort}	`,
+								(error, rows, field) => {
+
+									return res.send({
+										status: 200,
+										data: rows,
+										searchResult: searchResult,
+										info: {
+											total: total,
+											page: page,
+											totalPage: totalPage,
+										}
+									})
+
+								}
+							)
+						}
+					}
+				)
+
+			}
+		}
+	)
+}
+

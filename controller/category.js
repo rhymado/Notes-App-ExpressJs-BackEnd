@@ -38,28 +38,32 @@ exports.getCategoryById = (req, res) => {
 
 exports.postCategory = (req, res) => {
 
-	let name = req.body.categoryName;
+	let name = req.body.category_name;
+	let image_url = req.body.image_url;
 
 	if (name != '') {
 		connect.query(
-			`INSERT INTO category SET category_name=?`,
-			[name],
+			`INSERT INTO category SET category_name=?, image_url=?`,
+			[name, image_url],
 			(error, rows, field) => {
 			if (rows.affectedRows != 0) {
-				return res.send({
-					error: false,
-					data: rows,
-					message: "Data has been created"
-				})
-			} else {
-				return res.send({
-					error:false,
-					message: "No data has been created"
-				})
+				connect.query(
+					`SELECT * FROM category ORDER BY id DESC LIMIT 1`,
+					(error, rows, field) => {
+						if (error) {
+							throw error;
+						} else {
+							response.ok(rows, res)
+						}
+					}
+				)
 			}
 		})
 	} else {
-		res.json('categoryName cannot be Empty')
+		return res.send({
+			error: true,
+			message: 'categoryName cannot be Empty',
+		})
 	}
 }
 
@@ -102,7 +106,7 @@ exports.patchCategory = (req, res) => {
 
 
 exports.deleteCategory = (req, res)  => {
-	let id = req.params.id
+	let id = parseInt(req.params.id)
 
 	if (id != null && id != 0) {
 		connect.query(
@@ -112,7 +116,7 @@ exports.deleteCategory = (req, res)  => {
 				if (rows.affectedRows != 0) {
 					return res.send({
 						error: false,
-						data: rows,
+						values: id,
 						message: "Data has been deleted"
 					})
 				} else {
